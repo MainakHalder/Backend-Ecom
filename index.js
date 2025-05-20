@@ -318,9 +318,7 @@ app.get("/V1/users", async (req, res) => {
 
 const getCart = async () => {
   try {
-    const readCart = await Cart.find()
-      .populate("user")
-      .populate("items.products");
+    const readCart = await Cart.find().populate("products");
     return readCart;
   } catch (error) {
     console.error(`Error occured: ${error}`);
@@ -344,9 +342,7 @@ app.get("/V1/cart", async (req, res) => {
 
 const getWishlist = async () => {
   try {
-    const readWishlist = await Wishlist.find()
-      .populate("user")
-      .populate("products");
+    const readWishlist = await Wishlist.find().populate("products");
     return readWishlist;
   } catch (error) {
     console.log(`Error occured while fetching: ${error}`);
