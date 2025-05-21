@@ -8,6 +8,7 @@ const initializeDatabase = async () => {
     .connect(mongoUri, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
+      serverSelectionTimeoutMS: 30000,
     })
     .then(() => console.log("Connected to database"))
     .catch((error) => console.log("Error connecting the database ", error));
