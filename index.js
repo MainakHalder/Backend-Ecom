@@ -388,6 +388,32 @@ app.post("/V1/users/:userId", async (req, res) => {
   }
 });
 
+const updateCart = async (cartItemId, updatedCart) => {
+  try {
+    const newCartItem = await Cart.findByIdAndUpdate(cartItemId, updatedCart, {
+      new: true,
+    });
+    return newCartItem;
+  } catch (error) {
+    console.log(`Error occured while updating: ${error}`);
+  }
+};
+
+app.post("/V1/cart/:cartId", async (req, res) => {
+  try {
+    const updatedCartItem = await updateCart(req.params.cartId, req.body);
+    if (updatedCartItem) {
+      res
+        .status(200)
+        .json({ message: "Cart updated successfully", cart: updatedCartItem });
+    } else {
+      res.status(404).json({ error: `Cart item not found` });
+    }
+  } catch (error) {
+    res.status(500).json({ error: `Error occured while updating: ${error}` });
+  }
+});
+
 const deleteUser = async (userId) => {
   try {
     const deleteByUserId = await User.findByIdAndDelete(userId);
