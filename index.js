@@ -392,7 +392,7 @@ const updateCart = async (cartItemId, updatedCart) => {
   try {
     const newCartItem = await Cart.findByIdAndUpdate(cartItemId, updatedCart, {
       new: true,
-    });
+    }).populate("products");
     return newCartItem;
   } catch (error) {
     console.log(`Error occured while updating: ${error}`);
