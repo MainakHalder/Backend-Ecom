@@ -506,7 +506,7 @@ app.post("/V1/order", async (req, res) => {
 
 const getOrder = async () => {
   try {
-    const getAllOrders = await Order.find().populate("products");
+    const getAllOrders = await Order.find();
     return getAllOrders;
   } catch (error) {
     console.log(`Error occured while fetching orders: ${error}`);
