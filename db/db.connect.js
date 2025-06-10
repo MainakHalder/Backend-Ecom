@@ -17,8 +17,6 @@ require("dotenv").config();
 const initializeDatabase = async () => {
   try {
     const connection = await mongoose.connect(process.env.MONGODB, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
       serverSelectionTimeoutMS: 30000,
     });
     if (connection) {

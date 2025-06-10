@@ -4,6 +4,7 @@ const Category = require("./models/categories.models");
 const Cart = require("./models/carts.models");
 const Wishlist = require("./models/wishlists.model");
 const User = require("./models/users.models");
+const Order = require("./models/order.models");
 initializeDatabase();
 
 const express = require("express");
@@ -477,6 +478,75 @@ app.delete("/V1/wishlist/:wishlistId", async (req, res) => {
     }
   } catch (error) {
     res.status(500).json({ error: `Error occured while deleting: ${error}` });
+  }
+});
+
+const postOrder = async (newOrder) => {
+  try {
+    const newOrderHistory = new Order(newOrder);
+    const saveOrder = await newOrderHistory.save();
+    return saveOrder;
+  } catch (error) {
+    console.log(`Error occured while posting order: ${error}`);
+  }
+};
+
+app.post("/V1/order", async (req, res) => {
+  try {
+    const saveOrder = await postOrder(req.body);
+    if (saveOrder) {
+      res
+        .status(200)
+        .json({ message: "Data uploaded successfully", order: saveOrder });
+    }
+  } catch (error) {
+    res.status(500).json({ message: "Error while posting order" });
+  }
+});
+
+const getOrder = async () => {
+  try {
+    const getAllOrders = await Order.find().populate("products");
+    return getAllOrders;
+  } catch (error) {
+    console.log(`Error occured while fetching orders: ${error}`);
+  }
+};
+
+app.get("/V1/order", async (req, res) => {
+  try {
+    const getOrders = await getOrder();
+    if (getOrders) {
+      res.status(200).json(getOrders);
+    } else {
+      res.status(404).json("Orders not found");
+    }
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: `Error occured while fetching data ${error}` });
+  }
+});
+
+const deleteOrder = async (orderId) => {
+  try {
+    const deletedOrder = await Order.findByIdAndDelete(orderId);
+    return deletedOrder;
+  } catch (error) {
+    console.log(`Error occured while deleting order: ${error}`);
+  }
+};
+
+app.delete("/V1/order/:orderId", async (req, res) => {
+  try {
+    const deletedOrder = await deleteOrder(req.params.orderId);
+    if (deleteOrder) {
+      res.status(200).json({ message: "Order deleted successfully" });
+    } else {
+      res.status(404).json("Order not found");
+    }
+  } catch (error) {
+    res.status(500).json({ message: `Error occured while deleting: ${error}` });
   }
 });
 
